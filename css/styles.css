@@ -62,11 +62,24 @@ h1 {
   color: var(--text-color);
 }
 
+/* === logo === */
+.logo-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
 /* === Theme Toggle === */
 .theme-toggle-btn {
   position: absolute;
   top: 20px;
-  right: 30px;
+  right: 20px;
   background: transparent;
   font-size: 1.4rem;
   border: none;
@@ -217,7 +230,7 @@ h1 {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: grab;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
