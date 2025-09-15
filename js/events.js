@@ -96,48 +96,50 @@ export function setupDragAndDropListeners() {
   });
 }
 
-function showEditForm(task) {
+export function showEditForm(task) {
   const card = document.querySelector(`.task-card[data-id="${task.id}"]`);
+  if (!card) return;
+
   const contentDiv = card.querySelector('.task-content');
   const actionsDiv = card.querySelector('.task-actions');
 
-  // Clear content
+  if (!contentDiv || !actionsDiv) return;
+
+  // Clear current content
   contentDiv.innerHTML = '';
   actionsDiv.innerHTML = '';
 
-  // Create form elements
-  const titleInput = document.createElement('input');
+  // Create editable fields
+  const titleInput = createElement('input', 'edit-title-input');
   titleInput.value = task.title;
-  titleInput.className = 'edit-title-input';
 
-  const descInput = document.createElement('textarea');
+  const descInput = createElement('textarea', 'edit-desc-input');
   descInput.value = task.description;
-  descInput.className = 'edit-desc-input';
 
   const saveBtn = createElement('button', 'save-edit-btn', '💾 Save');
   const cancelBtn = createElement('button', 'cancel-edit-btn', '❌ Cancel');
 
-  // Add inputs to content
+  // Append editable fields
   contentDiv.appendChild(titleInput);
   contentDiv.appendChild(descInput);
 
-  // Add buttons to actions
+  // Append action buttons
   actionsDiv.appendChild(saveBtn);
   actionsDiv.appendChild(cancelBtn);
 
-  // Save
+  // SAVE handler
   saveBtn.addEventListener('click', () => {
     const updatedTask = {
       ...task,
       title: titleInput.value.trim(),
-      description: descInput.value.trim()
+      description: descInput.value.trim(),
     };
 
     updateTask(updatedTask);
     renderTasks(loadTasks());
   });
 
-  // Cancel
+  // CANCEL handler
   cancelBtn.addEventListener('click', () => {
     renderTasks(loadTasks());
   });
