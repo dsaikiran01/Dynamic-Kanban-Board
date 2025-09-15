@@ -96,6 +96,18 @@ export function setupDragAndDropListeners() {
   });
 }
 
+/**
+ * Replaces a task card's content with an inline editable form.
+ *
+ * This function targets the task card by its unique `data-id`, 
+ * clears its current content, and displays input fields to edit 
+ * the task title and description. It also adds "Save" and "Cancel" 
+ * buttons with respective handlers:
+ *
+ * @param {Object} task - The task object to edit.
+ * 
+ * Display inline edit form for a task with Save and Cancel buttons
+ */
 export function showEditForm(task) {
   const card = document.querySelector(`.task-card[data-id="${task.id}"]`);
   if (!card) return;
