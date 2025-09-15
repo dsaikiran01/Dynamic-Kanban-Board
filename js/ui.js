@@ -23,46 +23,32 @@ export function renderTasks(tasks) {
  * @param {Object} task - A task object
  * @returns {HTMLElement} - Task card element
  */
-function createTaskCard(task) {
+export function createTaskCard(task) {
   const card = createElement('div', 'task-card');
   card.setAttribute('draggable', true);
   card.setAttribute('data-id', task.id);
 
+  const content = createElement('div', 'task-content');
   const title = createElement('h3', '', task.title);
   const desc = createElement('p', '', task.description);
+  content.appendChild(title);
+  content.appendChild(desc);
 
-  const buttonContainer = createElement('div', 'task-actions');
+  const actions = createElement('div', 'task-actions');
   const editBtn = createElement('button', 'edit-btn', '✏️ Edit');
   const deleteBtn = createElement('button', 'delete-btn', '🗑️ Delete');
 
   editBtn.setAttribute('data-id', task.id);
   deleteBtn.setAttribute('data-id', task.id);
 
-  buttonContainer.appendChild(editBtn);
-  buttonContainer.appendChild(deleteBtn);
+  actions.appendChild(editBtn);
+  actions.appendChild(deleteBtn);
 
-  card.appendChild(title);
-  card.appendChild(desc);
-  card.appendChild(buttonContainer);
-
-  return card;
-}
-
-/*
-function createTaskCard(task) {
-  const card = createElement('div', 'task-card');
-  card.setAttribute('draggable', true);
-  card.setAttribute('data-id', task.id);
-
-  const title = createElement('h3', '', task.title);
-  const desc = createElement('p', '', task.description);
-
-  card.appendChild(title);
-  card.appendChild(desc);
+  card.appendChild(content);
+  card.appendChild(actions);
 
   return card;
 }
-  */
 
 /**
  * Get container ID based on task status

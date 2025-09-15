@@ -1,7 +1,7 @@
 // events.js
 import { addTask, updateTask, updateTaskStatus, loadTasks, deleteTask } from './storage.js';
 import { renderTasks } from './ui.js';
-import { generateID } from './utils.js';
+import { generateID, createElement } from './utils.js';
 
 /**
  * Set up form submission listener to create new tasks
@@ -97,19 +97,48 @@ export function setupDragAndDropListeners() {
 }
 
 function showEditForm(task) {
-  const newTitle = prompt('Edit title:', task.title);
-  const newDesc = prompt('Edit description:', task.description);
+  const card = document.querySelector(`.task-card[data-id="${task.id}"]`);
+  const contentDiv = card.querySelector('.task-content');
+  const actionsDiv = card.querySelector('.task-actions');
 
-  // Ensure user didn't cancel
-  if (newTitle !== null && newDesc !== null) {
+  // Clear content
+  contentDiv.innerHTML = '';
+  actionsDiv.innerHTML = '';
+
+  // Create form elements
+  const titleInput = document.createElement('input');
+  titleInput.value = task.title;
+  titleInput.className = 'edit-title-input';
+
+  const descInput = document.createElement('textarea');
+  descInput.value = task.description;
+  descInput.className = 'edit-desc-input';
+
+  const saveBtn = createElement('button', 'save-edit-btn', '💾 Save');
+  const cancelBtn = createElement('button', 'cancel-edit-btn', '❌ Cancel');
+
+  // Add inputs to content
+  contentDiv.appendChild(titleInput);
+  contentDiv.appendChild(descInput);
+
+  // Add buttons to actions
+  actionsDiv.appendChild(saveBtn);
+  actionsDiv.appendChild(cancelBtn);
+
+  // Save
+  saveBtn.addEventListener('click', () => {
     const updatedTask = {
       ...task,
-      title: newTitle.trim(),
-      description: newDesc.trim()
+      title: titleInput.value.trim(),
+      description: descInput.value.trim()
     };
 
     updateTask(updatedTask);
     renderTasks(loadTasks());
-  }
-}
+  });
 
+  // Cancel
+  cancelBtn.addEventListener('click', () => {
+    renderTasks(loadTasks());
+  });
+}

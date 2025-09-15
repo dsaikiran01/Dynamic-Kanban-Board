@@ -83,6 +83,42 @@ h1 {
   color: white;
 }
 
+/* === Task Update Form === */
+.edit-title-input,
+.edit-desc-input {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.edit-desc-input {
+  resize: vertical;
+  height: 60px;
+}
+
+.save-edit-btn,
+.cancel-edit-btn {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-right: 6px;
+  border: none;
+  border-radius: 3px;
+}
+
+.save-edit-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.cancel-edit-btn {
+  background-color: #bbb;
+  color: #333;
+}
+
 /* === Kanban Board Layout === */
 .kanban-board {
   display: flex;
