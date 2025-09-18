@@ -1,19 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Clumsy Kanban Board</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; }
-    .board { display: flex; gap: 1rem; margin-top: 20px; }
-    .column { flex: 1; background: #fff; padding: 10px; border-radius: 4px; }
-    .column h2 { margin-top: 0; }
-    .task { background: #e3e3ff; margin: 5px 0; padding: 5px; border-radius: 3px; cursor: grab; }
-    .task.dragging { opacity: 0.5; }
-    .dropzone { min-height: 50px; padding: 5px; border: 1px dashed #ccc; }
-    button { margin-left: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+    .board {
+      display: flex;
+      gap: 1rem;
+      margin-top: 20px;
+    }
+
+    .column {
+      flex: 1;
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .column h2 {
+      margin-top: 0;
+    }
+
+    .task {
+      background: #e3e3ff;
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 3px;
+      cursor: grab;
+    }
+
+    .task.dragging {
+      opacity: 0.5;
+    }
+
+    .dropzone {
+      min-height: 50px;
+      padding: 5px;
+      border: 1px dashed #ccc;
+    }
+
+    button {
+      margin-left: 5px;
+    }
   </style>
 </head>
+
 <body>
   <h1>Kanban Board (Clumsy Version)</h1>
 
@@ -45,8 +82,13 @@
     const input = document.getElementById("taskTitle")
 
     // BUG 1: IDs collide if two tasks added quickly
+    // FIXED: Added a ID to every element that identifies uniquely
+    let id = localStorage.getItem("ID") || 0;
     function createTask(title) {
-      return { id: Date.now().toString(), title, status: "todo" }
+      id++;
+      localStorage.setItem("ID", id);
+      console.log(`${id}-${Date.now()}`);
+      return { id: `${id}-${Date.now()}`, title, status: "todo" }
     }
 
     function save() {
@@ -64,6 +106,7 @@
         div.dataset.status = task.status
 
         // Delete button (BUG 2: sometimes deletes wrong task)
+        // FIXED: As unique ID generated, no 2 tasks will have same id
         const btn = document.createElement("button")
         btn.textContent = "x"
         btn.onclick = () => {
@@ -117,4 +160,5 @@
     render()
   </script>
 </body>
+
 </html>
