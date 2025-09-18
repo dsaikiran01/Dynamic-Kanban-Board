@@ -1,52 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  <title>Dynamic Kanban Board</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8">
+  <title>Clumsy Kanban Board</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; }
+    .board { display: flex; gap: 1rem; margin-top: 20px; }
+    .column { flex: 1; background: #fff; padding: 10px; border-radius: 4px; }
+    .column h2 { margin-top: 0; }
+    .task { background: #e3e3ff; margin: 5px 0; padding: 5px; border-radius: 3px; cursor: grab; }
+    .task.dragging { opacity: 0.5; }
+    .dropzone { min-height: 50px; padding: 5px; border: 1px dashed #ccc; }
+    button { margin-left: 5px; }
+  </style>
 </head>
-
 <body>
+  <h1>Kanban Board (Clumsy Version)</h1>
 
-  <header>
-    <div class="logo-title">
-      <img src="assets/logo.png" alt="Logo" class="logo" />
-      <h1>Kanban Board</h1>
-    </div>
-    <button id="themeToggle" class="theme-toggle-btn">🌙</button>
-  </header>
+  <form id="taskForm">
+    <input id="taskTitle" placeholder="Task title..." required>
+    <button type="submit">Add</button>
+  </form>
 
-  <!-- Task Creation Form -->
-  <section class="task-form">
-    <form id="taskForm">
-      <input type="text" id="taskTitle" placeholder="Task Title" required />
-      <textarea id="taskDescription" placeholder="Task Description" required></textarea>
-      <button type="submit">Add Task</button>
-    </form>
-  </section>
-
-  <!-- Kanban Columns -->
-  <main class="kanban-board">
-    <div class="kanban-column" data-status="todo">
+  <div class="board">
+    <div class="column" data-status="todo">
       <h2>To Do</h2>
-      <div class="task-list" id="todoTasks"></div>
+      <div class="dropzone" id="todo"></div>
     </div>
-
-    <div class="kanban-column" data-status="in-progress">
+    <div class="column" data-status="inprogress">
       <h2>In Progress</h2>
-      <div class="task-list" id="inProgressTasks"></div>
+      <div class="dropzone" id="inprogress"></div>
     </div>
-
-    <div class="kanban-column" data-status="done">
+    <div class="column" data-status="done">
       <h2>Done</h2>
-      <div class="task-list" id="doneTasks"></div>
+      <div class="dropzone" id="done"></div>
     </div>
-  </main>
+  </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script>
+    // CLUMSY GLOBALS
+    let tasks = JSON.parse(localStorage.getItem("tasks") || "[]")
+
+    const form = document.getElementById("taskForm")
+    const input = document.getElementById("taskTitle")
+
+    // BUG 1: IDs collide if two tasks added quickly
+    function createTask(title) {
+      return { id: Date.now().toString(), title, status: "todo" }
+    }
+
+    function save() {
+      localStorage.setItem("tasks", JSON.stringify(tasks))
+    }
+
+    function render() {
+      document.querySelectorAll(".dropzone").forEach(z => z.innerHTML = "")
+      tasks.forEach(task => {
+        const div = document.createElement("div")
+        div.className = "task"
+        div.textContent = task.title
+        div.draggable = true
+        div.dataset.id = task.id
+        div.dataset.status = task.status
+
+        // Delete button (BUG 2: sometimes deletes wrong task)
+        const btn = document.createElement("button")
+        btn.textContent = "x"
+        btn.onclick = () => {
+          tasks = tasks.filter(t => t.id !== task.id) // loses sync if IDs collided
+          save()
+          render()
+        }
+        div.appendChild(btn)
+
+        div.addEventListener("dragstart", e => {
+          div.classList.add("dragging")
+          e.dataTransfer.setData("text/plain", task.id)
+        })
+        div.addEventListener("dragend", () => div.classList.remove("dragging"))
+
+        document.getElementById(task.status).appendChild(div)
+      })
+    }
+
+    document.querySelectorAll(".dropzone").forEach(zone => {
+      zone.addEventListener("dragover", e => {
+        e.preventDefault()
+      })
+      zone.addEventListener("drop", e => {
+        e.preventDefault()
+        const id = e.dataTransfer.getData("text/plain")
+        const task = tasks.find(t => t.id === id)
+
+        // BUG 3 (intentional): dropping into "inprogress" sometimes fails
+        // because we forget to handle undefined task gracefully
+        if (!task) {
+          console.error("Task not found for drop:", id)
+          return
+        }
+
+        task.status = zone.id
+        save()
+        render()
+      })
+    })
+
+    form.onsubmit = e => {
+      e.preventDefault()
+      const t = createTask(input.value)
+      tasks.push(t)
+      input.value = ""
+      save()
+      render()
+    }
+
+    render()
+  </script>
 </body>
-
 </html>
