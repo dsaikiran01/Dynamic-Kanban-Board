@@ -1,0 +1,97 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+#container {
+    min-height: 100vh;
+    min-width: 100vw;
+    align-items: center;
+    text-align: center;
+}
+
+.board {
+    display: flex;
+    gap: 1rem;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.column {
+    min-width: 25vw;
+    flex: 1;
+    background: #fff;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.column h2 {
+    margin-top: 0;
+}
+
+.task {
+    text-align: center;
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: grab;
+}
+
+.task-title,
+.task-priority {
+    padding: 2px 0;
+}
+
+.task-priority {
+    text-transform: uppercase;
+}
+
+.high {
+    background: #f52f28;
+}
+
+.medium {
+    background: #f1f50f;
+}
+
+.low {
+    background: #54ec4e;
+}
+
+.task>button {
+    width: 30px;
+}
+
+.task.dragging {
+    opacity: 0.5;
+}
+
+.dropzone {
+    min-height: 50px;
+    padding: 5px;
+    border: 1px dashed #ccc;
+}
+
+button {
+    margin-left: 5px;
+}
+
+.task>li {
+    list-style: none;
+}
+
+@media (max-width: 600px) {
+    .board {
+        flex-direction: column;
+    }
+}
