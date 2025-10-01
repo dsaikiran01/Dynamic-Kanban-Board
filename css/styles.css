@@ -113,6 +113,14 @@ h1 {
   resize: none;
 }
 
+#taskPriority {
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+}
+
 #taskForm button {
   padding: 10px 20px;
   background-color: var(--btn-bg);
@@ -153,7 +161,8 @@ h1 {
 
 /* === Task Update Form === */
 .edit-title-input,
-.edit-desc-input {
+.edit-desc-input,
+.edit-priority-select {
   width: 100%;
   padding: 6px;
   margin-bottom: 8px;

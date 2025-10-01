@@ -14,16 +14,19 @@ export function setupFormListener() {
 
     const titleInput = document.getElementById('taskTitle');
     const descInput = document.getElementById('taskDescription');
+    const priorityInput = document.getElementById('taskPriority');
 
     const title = titleInput.value.trim();
     const description = descInput.value.trim();
+    const priority = priorityInput.value;
 
-    if (!title || !description) return;
+    if (!title || !description || !priority) return;
 
     const newTask = {
       id: generateID(),
       title,
       description,
+      priority,
       status: 'todo'
     };
 
@@ -33,6 +36,7 @@ export function setupFormListener() {
     // Clear form
     titleInput.value = '';
     descInput.value = '';
+    priorityInput.value = 'high';
   });
 }
 
@@ -128,10 +132,20 @@ export function showEditForm(task) {
   const descInput = createElement('textarea', 'edit-desc-input');
   descInput.value = task.description;
 
+  // Priority dropdown
+  const prioritySelect = createElement('select', 'edit-priority-select');
+  ['high', 'medium', 'low'].forEach(p => {
+    const opt = createElement('option', '', p.charAt(0).toUpperCase() + p.slice(1));
+    opt.value = p;
+    if (task.priority === p) opt.selected = true;
+    prioritySelect.appendChild(opt);
+  });
+
   const saveBtn = createElement('button', 'save-edit-btn', '💾 Save');
   const cancelBtn = createElement('button', 'cancel-edit-btn', '❌ Cancel');
 
   // Append editable fields
+  contentDiv.appendChild(prioritySelect);
   contentDiv.appendChild(titleInput);
   contentDiv.appendChild(descInput);
 
@@ -145,6 +159,7 @@ export function showEditForm(task) {
       ...task,
       title: titleInput.value.trim(),
       description: descInput.value.trim(),
+      priority: prioritySelect.value
     };
 
     updateTask(updatedTask);
